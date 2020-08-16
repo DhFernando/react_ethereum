@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
+import React, { useEffect } from 'react'; 
 import './App.css';
 import Web3 from 'web3'
 
@@ -13,10 +12,10 @@ function App() {
 
   const loadBlockChainData = async () => {
       const provider = new Web3.providers.HttpProvider('http://localhost:7545')
-      const web3 = new Web3(Web3.givenProvider || provider);  
+      const web3 = new Web3(provider || Web3.givenProvider);  
       const MyContract = require('./smartContract/build/contracts/EthReact.json')
-
-      const id = await web3.eth.net.getId()
+       
+      const id = await web3.eth.net.getId() 
 
       const deployeNetwork = MyContract.networks[id];
 
@@ -29,22 +28,24 @@ function App() {
       // account addresses
       const addresses = await web3.eth.getAccounts()
       console.log(addresses)
-      
-      const result1 = await contract.methods.getData2().call()
-      console.log(result1);
 
-      console.log(await contract.methods.setData(addresses[4])
-        .send({ from : addresses[3]  , value : web3.utils.toWei('1', 'ether') }))
+      // console.log(
+      //   await contract.methods.createPack(addresses[0] , "Apple" , 9 , 6)
+      // .send({from : addresses[0]})
+      // )
+
+      console.log(
+        await contract.methods.createPack( addresses[2] , "Apple2" , 9 , 2 )
+        .send({from : addresses[3] , gas:3000000})
+      )  
       
+      
+      const v =  await contract.methods.getItem( addresses[2] )
+        .call()
        
-      
-      const result2 = await contract.methods.getData().call()
-      console.log(result2);
-     
-      console.log(deployeNetwork.address)
+        console.log(v)
 
-
-
+  
       web3.eth.getBalance(addresses[3] , (err , bal)=> {
         console.log(web3.utils.fromWei(bal , 'ether'));
       })
